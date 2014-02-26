@@ -8,8 +8,6 @@ gem 'coffee-rails', '~> 4.0.0'
 gem 'jquery-rails'
 gem 'jbuilder', '~> 1.2'
 
-gem "webmock", "~> 1.17.3"
-gem "vcr", "~> 2.8.0"
 gem "httparty", "~> 0.13.0"
 gem "active_shipping", "~> 0.11.2"
 gem "figaro"
@@ -25,6 +23,11 @@ group :development, :test do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'simplecov', :require => false
+end
+
+group :test do
+  gem "webmock", "~> 1.17.3"
+  gem "vcr", "~> 2.8.0"
 end
 
 group :production do
