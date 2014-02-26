@@ -10,6 +10,9 @@ gem 'jbuilder', '~> 1.2'
 
 gem "webmock", "~> 1.17.3"
 gem "vcr", "~> 2.8.0"
+gem "httparty", "~> 0.13.0"
+gem "active_shipping", "~> 0.11.2"
+gem "figaro"
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
