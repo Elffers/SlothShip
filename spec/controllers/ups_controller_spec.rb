@@ -13,15 +13,23 @@ describe UpsController do
                       }}
     let(:package){ [100, [93,10], :cylinder => true] }
     let(:ups_client) { double("ups_client")}
+    let(:extracted_info) { {"price" => 13437, "delivery_date" => "2014-02-27T00:00:00+00:00"} }
 
     before do
       allow(controller).to receive(:ups_client).and_return ups_client
-      allow(ups_client).to receive(:find_rates).and_return({ origin: "hi"})
+      # allow(ups_client).to receive(:find_rates).and_return( {order: "hi"} )
+      allow(controller).to receive(:extract_info).and_return(extracted_info)
     end
 
     it 'should return JSON' do
       get :estimate, format: :json
       expect{JSON.parse(response.body)}.to_not raise_error
+    end
+
+    it 'should return estimated shipping price and delivery info' do
+      get :estimate, format: :json
+      order_info = JSON.parse(response.body)
+      expect(order_info).to eq extracted_info
     end
     
   end
