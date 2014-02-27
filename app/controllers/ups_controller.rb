@@ -3,6 +3,42 @@ include ActiveMerchant::Shipping
 
 class UpsController < ApplicationController
 
+  def go_estimate
+  
+    estimate_hash = {orders: {} }
+    estimate_hash[:orders][:packages] = [
+                              { weight:  100,                        
+                                dimensions: [93,10, 5],                    
+                                units: "metic" 
+                              },
+
+                              { weight: 7.5 * 16,
+                                dimensions: [15, 10, 4.5],              
+                                units: "imperial"
+                              }
+                            ]
+              estimate_hash[:orders][:origin] = {
+                                        :country => 'US',
+                                        :state => 'CA',
+                                        :city => 'Beverly Hills',
+                                        :zip => '90210'},
+              estimate_hash[:orders][:destination] = {
+                                              :country => 'US',
+                                              :state => 'WA',
+                                              :city => 'Seattle',
+                                              :postal_code => '98117'
+                                            }
+    
+    redirect_to generate_url("/ups_estimate.json", estimate_hash) 
+
+  end
+
+  def generate_url(url, params = {})
+    uri = URI(url)
+    uri.query = params.to_query
+    uri.to_s
+  end
+
   def estimate
     @estimate = extract_info(estimate_params)
     respond_to do |format|
@@ -27,13 +63,16 @@ class UpsController < ApplicationController
       shipment[:delivery_date] = rate.delivery_date
       shipment
     end
-    # info[:price] = rates.price
-    # info[:delivery_date] = rate.delivery_date
     info
   end
 
   def estimate_params
-    # params.require(:order).permit(:origin, :destination, :packages)
+    #params comes back in from query string as hash, don't need to use Rack::Utils.parse_nested_query(query_string) after all
+    params.require(:order).permit(:destination, :packages)
+    # expect :destination to be a hash containing sanitized address
+    # expect :packages to be an array of hashes, each containing :weight, :dimensions, and :units (see https://github.com/Shopify/active_shipping/blob/master/lib/active_shipping/shipping/package.rb for other options)
+
+    ### hard coded test option
     estimate_hash = {}
     estimate_hash[:packages] = [
                 Package.new(  100,                        # 100 grams
@@ -53,6 +92,7 @@ class UpsController < ApplicationController
                             :city => 'Seattle',
                             :postal_code => '98117')
     estimate_hash
-    # estimate_paramsms
+
+    ### end test option
   end
 end

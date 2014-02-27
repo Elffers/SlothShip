@@ -11,6 +11,7 @@ gem 'jbuilder', '~> 1.2'
 gem "httparty", "~> 0.13.0"
 gem "active_shipping", "~> 0.11.2"
 gem "figaro"
+gem "addressable", "~> 2.3.5"
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
