@@ -18,10 +18,15 @@ class UpsController < ApplicationController
   end
 
   def extract_info(order)
-    info = {} 
     response = ups_client.find_rates(order[:origin], order[:destination], order[:packages])
     rates = response.rates
-    info[:options] = rates.map {|rate| [rate.service_name, rate.price, rate.delivery_date] }
+    info = rates.map do |rate| 
+      shipment = {}
+      shipment[:service] = rate.service_name
+      shipment[:price]   = rate.price
+      shipment[:delivery_date] = rate.delivery_date
+      shipment
+    end
     # info[:price] = rates.price
     # info[:delivery_date] = rate.delivery_date
     info
