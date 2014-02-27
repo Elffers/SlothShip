@@ -6,11 +6,11 @@ describe UpsController do
                     :state => 'CA',
                     :city => 'Beverly Hills',
                     :zip => '90210'}}
-    let(:destination){{ :country => 'CA',
+    let(:destination) { { :country => 'CA',
                         :province => 'ON',
                         :city => 'Ottawa',
                         :postal_code => 'K1P 1J1'
-                      }}
+                      } }
     let(:package){ [100, [93,10], :cylinder => true] }
     let(:params){ {origin: origin, destination: destination, packages: package} }
     let(:ups_client) { double("ups_client")}
@@ -24,7 +24,9 @@ describe UpsController do
 
     it 'should return JSON' do
       get :estimate, order: params, format: :json
+      parsed_response = JSON.parse(response.body)
       expect{JSON.parse(response.body)}.to_not raise_error
+      expect(parsed_response.class).to eq(Hash)
     end
 
     it 'should return estimated shipping price and delivery info' do
