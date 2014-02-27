@@ -2,42 +2,31 @@ require 'active_shipping'
 include ActiveMerchant::Shipping
 
 class UpsController < ApplicationController
-
   #test method to simulate external request for estimate
   def go_estimate
     estimate_hash = {order: {} }
     estimate_hash[:order][:packages] =[ { weight: 100,                        
-                                          dimensions: [93, 10, 5],                    
+                                          foo: [93, 10, 5],                    
                                           units: "metric" 
                                         },
 
                                         { weight: (7.5 * 16),
-                                          dimensions: [15, 10, 4.5],              
+                                          foo: [15, 10, 4.5],              
                                           units: "imperial"
                                         }
                                       ]
     estimate_hash[:order][:origin] =  { :country => 'US',
-                                :state => 'CA',
-                                :city => 'Beverly Hills',
-                                :zip => '90210'
-                              }
+                                        :state => 'CA',
+                                        :city => 'Beverly Hills',
+                                        :zip => '90210'
+                                      }
 
     estimate_hash[:order][:destination] = { :country => 'US',
-                                    :state => 'WA',
-                                    :city => 'Seattle',
-                                    :postal_code => '98117'
-                                  }
-    redirect_to generate_url("/ups_estimate.json", estimate_hash) 
-
-  end
-
-  # private test helper method for above
-  def generate_url(url, params = {})
-    #params hash is working correctly here
-    raise
-    uri = URI(url)
-    uri.query = params.to_query
-    uri.to_s
+                                            :state => 'WA',
+                                            :city => 'Seattle',
+                                            :postal_code => '98117'
+                                          }
+    redirect_to "/ups_estimate.json?#{estimate_hash.to_query}"
   end
 
   ###
@@ -72,10 +61,11 @@ class UpsController < ApplicationController
   def estimate_params
     # params comes back in from query string as hash (no need for explicit conversion), but the Rack::Utils.parse_nested_query(query_string) is not converting the hash correctly
     # params.require(:order).permit(:destination, :packages)
+    # raise
     # expect :destination to be a hash containing sanitized address
     # expect :packages to be an array of hashes, each containing :weight, :dimensions, and :units (see https://github.com/Shopify/active_shipping/blob/master/lib/active_shipping/shipping/package.rb for other options)
 
-    ### hard coded test option
+    ### hard coded test params
     params_hash = {order: {} }
     params_hash[:order][:packages]    = [ { weight: 100,                        
                                             dimensions: [93, 10, 5],
@@ -98,7 +88,7 @@ class UpsController < ApplicationController
                                             :city => 'Seattle',
                                             :postal_code => '98117'
                                           }
-
+    ### end test params 
     order = { origin: set_destination(params_hash[:order][:origin]), 
               destination: set_origin(params_hash[:order][:destination]),
               packages: set_packages(params_hash[:order][:packages])
