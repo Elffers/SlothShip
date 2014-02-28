@@ -48,6 +48,6 @@ class UpsController < ApplicationController
                             :city => 'Seattle',
                             :postal_code => '98117')
     estimate_hash
-    # estimate_paramsms
+    # estimate_params
   end
 end
