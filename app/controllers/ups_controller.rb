@@ -59,7 +59,7 @@ class UpsController < ApplicationController
   end
 
   def estimate_params
-    raise
+    # raise
     # params comes back in from query string as hash (no need for explicit conversion), but the Rack::Utils.parse_nested_query(query_string) is not converting the hash correctly
     # params.require(:order).permit(:destination, :packages)
     # raise
