@@ -2,9 +2,37 @@ require 'active_shipping'
 include ActiveMerchant::Shipping
 
 class UpsController < ApplicationController
+  #test method to simulate external request for estimate
+  def mock_external_request
+    estimate_hash = {order: {} }
+    estimate_hash[:order][:packages] =[ { weight: 100,
+        dimensions: [93, 10, 5],
+        units: "metric"
+    },
+
+        { weight: (7.5 * 16),
+        dimensions: [15, 10, 4.5],
+        units: "imperial"
+    }
+    ]
+    estimate_hash[:order][:origin] =  { :country => 'US',
+                                        :state => 'CA',
+                                        :city => 'Beverly Hills',
+                                        :zip => '90210'
+    }
+
+    estimate_hash[:order][:destination] = { :country => 'US',
+                                            :state => 'WA',
+                                            :city => 'Seattle',
+                                            :postal_code => '98117'
+    }
+
+    redirect_to "/ups_estimate.json?#{estimate_hash.to_query}"
+  end
 
   def estimate
     @estimate = extract_info(estimate_params)
+    @response = response.inspect
     respond_to do |format|
       format.html { render :estimate }
       format.json { render json: @estimate }
@@ -20,7 +48,7 @@ class UpsController < ApplicationController
   def extract_info(order)
     response = ups_client.find_rates(order[:origin], order[:destination], order[:packages])
     rates = response.rates
-    info = rates.map do |rate| 
+    info = rates.map do |rate|
       shipment = {}
       shipment[:service] = rate.service_name
       shipment[:price]   = rate.price
@@ -31,6 +59,7 @@ class UpsController < ApplicationController
   end
 
   def estimate_params
+    # raise
     # params comes back in from query string as hash (no need for explicit conversion), but the Rack::Utils.parse_nested_query(query_string) is not converting the hash correctly
     # params.require(:order).permit(:destination, :packages)
     # raise
@@ -39,32 +68,32 @@ class UpsController < ApplicationController
 
     ### hard coded test params
     params_hash = {order: {} }
-    params_hash[:order][:packages]    = [ { weight: 100,                        
-                                            dimensions: [93, 10, 5],
-                                            :units => :metric 
-                                          },
+    params_hash[:order][:packages]    = [ { weight: 100,
+        dimensions: [93, 10, 5],
+        :units => :metric
+    },
 
-                                          { weight: (7.5 * 16),
-                                            dimensions: [15, 10, 4.5],
-                                            :units => :imperial
-                                          }
-                                        ]
+        { weight: (7.5 * 16),
+        dimensions: [15, 10, 4.5],
+        :units => :imperial
+    }
+    ]
     params_hash[:order][:origin]      = { :country => 'US',
-                                            :state => 'CA',
-                                            :city => 'Beverly Hills',
-                                            :zip => '90210'
-                                          }
+                                          :state => 'CA',
+                                          :city => 'Beverly Hills',
+                                          :zip => '90210'
+    }
 
     params_hash[:order][:destination] = { :country => 'US',
-                                            :state => 'WA',
-                                            :city => 'Seattle',
-                                            :postal_code => '98117'
-                                          }
-    ### end test params 
-    order = { origin: set_destination(params_hash[:order][:origin]), 
-              destination: set_origin(params_hash[:order][:destination]),
-              packages: set_packages(params_hash[:order][:packages])
-            }
+                                          :state => 'WA',
+                                          :city => 'Seattle',
+                                          :postal_code => '98117'
+    }
+    ### end test params
+    order = { origin: set_destination(params_hash[:order][:origin]),
+        destination: set_origin(params_hash[:order][:destination]),
+        packages: set_packages(params_hash[:order][:packages])
+    }
     order
   end
 
@@ -80,19 +109,6 @@ class UpsController < ApplicationController
     packages.map do |package|
       Package.new(package[:weight], package[:dimensions], units: package[:units])
     end
-                Package.new(  (7.5 * 16),                 # 7.5 lbs, times 16 oz/lb.
-                              [15, 10, 4.5],              # 15x10x4.5 inches
-                              :units => :imperial)        # not grams, not centimetres
-                ]
-    estimate_hash[:origin] = Location.new(  :country => 'US',
-                            :state => 'CA',
-                            :city => 'Beverly Hills',
-                            :zip => '90210')
-    estimate_hash[:destination] = Location.new( :country => 'US',
-                            :state => 'WA',
-                            :city => 'Seattle',
-                            :postal_code => '98117')
-    estimate_hash
-    # estimate_params
   end
+
 end
