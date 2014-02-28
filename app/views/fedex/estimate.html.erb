@@ -1,0 +1,13 @@
+<ul>
+<% @info.each do |type| %>
+  <li><strong>Service:</strong> <%= type[:service] %></li>
+  <li><strong>Price:</strong> $<%= (type[:price].to_f / 100).round(2) %></li>
+  <li><strong>Estimated Delivery Date:</strong>
+      <% if type[:delivery_date] %>
+        <%= type[:delivery_date].strftime('%m/%d/%Y') %></li>
+      <% else %>
+        Unavailable</li>
+      <% end %>
+  <br>
+<% end %>
+</ul>
