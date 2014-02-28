@@ -89,8 +89,8 @@ class UpsController < ApplicationController
                                             :postal_code => '98117'
                                           }
     ### end test params 
-    order = { origin: set_destination(params_hash[:order][:origin]), 
-              destination: set_origin(params_hash[:order][:destination]),
+    order = { origin: set_origin(params_hash[:order][:origin]), 
+              destination: set_destination(params_hash[:order][:destination]),
               packages: set_packages(params_hash[:order][:packages])
             }
     order
