@@ -3,15 +3,15 @@ include ActiveMerchant::Shipping
 
 class UpsController < ApplicationController
   #test method to simulate external request for estimate
-  def go_estimate
+  def mock_external_request
     estimate_hash = {order: {} }
-    estimate_hash[:order][:packages] =[ { weight: 100,                        
-                                          foo: [93, 10, 5],                    
+    estimate_hash[:order][:packages] =[ { weight: 100,
+                                          dimensions: [93, 10, 5],
                                           units: "metric" 
                                         },
 
                                         { weight: (7.5 * 16),
-                                          foo: [15, 10, 4.5],              
+                                          dimensions: [15, 10, 4.5],
                                           units: "imperial"
                                         }
                                       ]
@@ -26,6 +26,7 @@ class UpsController < ApplicationController
                                             :city => 'Seattle',
                                             :postal_code => '98117'
                                           }
+                                          
     redirect_to "/ups_estimate.json?#{estimate_hash.to_query}"
   end
 
@@ -33,6 +34,7 @@ class UpsController < ApplicationController
 
   def estimate
     @estimate = extract_info(estimate_params)
+    @response = response.inspect
     respond_to do |format|
       format.html { render :estimate }
       format.json { render json: @estimate }
@@ -59,6 +61,7 @@ class UpsController < ApplicationController
   end
 
   def estimate_params
+    raise
     # params comes back in from query string as hash (no need for explicit conversion), but the Rack::Utils.parse_nested_query(query_string) is not converting the hash correctly
     # params.require(:order).permit(:destination, :packages)
     # raise
