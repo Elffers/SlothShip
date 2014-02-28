@@ -34,8 +34,4 @@ class FedexController < ApplicationController
     FedEx.new(options)
   end
 
-  def collect_rates
-    @fedex_rates = @estimate.rates.sort_by(&:price).collect {|rate| [rate.service_name, rate.price]}
-  end
-
 end
