@@ -59,10 +59,8 @@ class UpsController < ApplicationController
   end
 
   def estimate_params
-    # raise
     # params comes back in from query string as hash (no need for explicit conversion), but the Rack::Utils.parse_nested_query(query_string) is not converting the hash correctly
-    # params.require(:order).permit(:destination, :packages)
-    # raise
+    ## params.require(:order).permit(:origin, :destination, :packages)
     # expect :destination to be a hash containing sanitized address
     # expect :packages to be an array of hashes, each containing :weight, :dimensions, and :units (see https://github.com/Shopify/active_shipping/blob/master/lib/active_shipping/shipping/package.rb for other options)
 
