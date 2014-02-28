@@ -3,18 +3,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  def extract_info(order)
-    response = ups_client.find_rates(order[:origin], order[:destination], order[:packages])
-    rates = response.rates
-    info = rates.map do |rate|
-      shipment = {}
-      shipment[:service] = rate.service_name
-      shipment[:price]   = rate.price
-      shipment[:delivery_date] = rate.delivery_date
-      shipment
-    end
-    info
-  end
+
 
   def estimate_params
     # raise
