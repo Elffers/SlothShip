@@ -25,10 +25,10 @@ class Shipper
   def self.extract_info(order)
     info = all_carriers(order).map do |rate|
       shipment = {}
-      shipment[:carrier] =  rate.carrier
-      shipment[:service] = rate.service_name
-      shipment[:price]   = rate.price
-      shipment[:delivery_date] = rate.delivery_date
+      shipment[:carrier]        = rate.carrier
+      shipment[:service]        = rate.service_name
+      shipment[:price]          = rate.price
+      shipment[:delivery_date]  = rate.delivery_date
       shipment
     end
     info
@@ -42,8 +42,12 @@ class Shipper
     fedex_client.find_rates(order[:origin], order[:destination], order[:packages])
   end
 
+  def self.usps_info(order)
+    usps_client.find_rates(order[:origin], order[:destination], order[:packages])
+  end
+
   def self.all_carriers(order)
-    ups_info(order).rates + fedex_info(order).rates
+    ups_info(order).rates + fedex_info(order).rates #eventually add usps
   end
 
 end

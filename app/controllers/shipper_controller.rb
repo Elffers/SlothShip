@@ -1,4 +1,4 @@
-class UpsController < ApplicationController
+class ShipperController < ApplicationController
 
   def estimate
     @estimate = Shipper.extract_info(estimate_params)
