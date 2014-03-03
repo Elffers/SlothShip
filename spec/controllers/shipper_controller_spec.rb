@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe UpsController do
+describe ShipperController do
   describe 'GET estimate' do
     let(:origin){ { :country => 'US',
                     :state => 'CA',
