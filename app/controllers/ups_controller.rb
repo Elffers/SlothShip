@@ -1,7 +1,13 @@
-require 'active_shipping'
-include ActiveMerchant::Shipping
-
 class UpsController < ApplicationController
+
+  def estimate
+    @estimate = Shipper.extract_info(estimate_params)
+    respond_to do |format|
+      format.html { render :estimate }
+      format.json { render json: @estimate }
+    end
+  end
+
   #test method to simulate external request for estimate
   def mock_external_request
     estimate_hash = {order: {} }
@@ -29,32 +35,4 @@ class UpsController < ApplicationController
                                           
     redirect_to "/ups_estimate.json?#{estimate_hash.to_query}"
   end
-
-  def estimate
-    @estimate = extract_info(estimate_params)
-    @response = response.inspect
-    respond_to do |format|
-      format.html { render :estimate }
-      format.json { render json: @estimate }
-    end
-  end
-
-  private
-
-  def extract_info(order)
-    response = ups_client.find_rates(order[:origin], order[:destination], order[:packages])
-    info = response.rates.map do |rate|
-      shipment = {}
-      shipment[:service] = rate.service_name
-      shipment[:price]   = rate.price
-      shipment[:delivery_date] = rate.delivery_date
-      shipment
-    end
-    info
-  end
-
-  def ups_client
-    UPS.new(:login => ENV['UPS_USERNAME'], :password => ENV['UPS_PASSWORD'], :key => ENV['UPS_ACCESS_KEY'])
-  end
-
 end
