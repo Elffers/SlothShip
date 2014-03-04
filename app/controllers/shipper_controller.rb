@@ -2,6 +2,7 @@ class ShipperController < ApplicationController
 
   def estimate
     @estimate = Shipper.extract_info(estimate_params)
+    Request.create(request: estimate_params.to_s, result: @estimate.to_s)
     respond_to do |format|
       format.html { render :estimate }
       format.json { render json: @estimate }
