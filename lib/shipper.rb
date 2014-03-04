@@ -34,6 +34,11 @@ class Shipper
     info
   end
 
+  def self.fastest_rates(order)
+    deliverable = self.extract_info(order).keep_if { |option| option[:delivery_date].present?}
+    deliverable.sort_by { |option| option[:delivery_date] }
+  end
+
   def self.ups_info(order)
     ups_client.find_rates(order[:origin], order[:destination], order[:packages])
   end
@@ -47,7 +52,7 @@ class Shipper
   end
 
   def self.all_carriers(order)
-    ups_info(order).rates + fedex_info(order).rates #eventually add usps
+    ups_info(order).rates + fedex_info(order).rates #eventually add usps?
   end
 
 end
