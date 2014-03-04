@@ -29,26 +29,26 @@ class ShipperController < ApplicationController
     estimate_hash = {order: {} }
     estimate_hash[:order][:packages] =[ { weight: 100,
                                           dimensions: "93, 10, 5", #breaks if this is an array
-                                          units: "metric" 
+                                          units: :metric 
                                         },
 
                                         { weight: (7.5 * 16),
                                           dimensions: "15, 10, 4.5",
-                                          units: "imperial"
+                                          units: :imperial
                                         }
                                       ]
     estimate_hash[:order][:origin] =  { :country => 'US',
-                                        :state => 'CA',
-                                        :city => 'Beverly Hills',
+                                        #:state => 'CA',
+                                        #:city => 'Beverly Hills',
                                         :zip => '90210'
                                       }
 
     estimate_hash[:order][:destination] = { :country => 'US',
-                                            :state => 'WA',
-                                            :city => 'Seattle',
+                                            #:state => 'WA',
+                                            #:city => 'Seattle',
                                             :postal_code => '98117'
                                           }
                                           
-    redirect_to "/get_cheapest.json?#{estimate_hash.to_query}"
+    redirect_to "/shipping_estimate?#{estimate_hash.to_query}"
   end
 end
