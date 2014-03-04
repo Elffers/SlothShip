@@ -39,6 +39,10 @@ class Shipper
     deliverable.sort_by { |option| option[:delivery_date] }
   end
 
+  def self.cheapest_rates(order)
+    self.extract_info(order).sort_by { |option| option[:price] }
+  end
+
   def self.ups_info(order)
     ups_client.find_rates(order[:origin], order[:destination], order[:packages])
   end

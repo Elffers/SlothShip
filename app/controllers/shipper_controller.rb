@@ -17,6 +17,11 @@ class ShipperController < ApplicationController
   end
 
   def cheapest
+    @estimate = Shipper.cheapest_rates(estimate_params)
+     respond_to do |format|
+      format.html { render :estimate }
+      format.json { render json: @estimate }
+    end
   end
 
   #test method to simulate external request for estimate
@@ -44,6 +49,6 @@ class ShipperController < ApplicationController
                                             :postal_code => '98117'
                                           }
                                           
-    redirect_to "/get_fastest.json?#{estimate_hash.to_query}"
+    redirect_to "/get_cheapest.json?#{estimate_hash.to_query}"
   end
 end
