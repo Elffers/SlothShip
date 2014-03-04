@@ -11,7 +11,7 @@ describe ShipperController do
                         :city => 'Ottawa',
                         :postal_code => 'K1P 1J1'
                       } }
-    let(:package){ [100, [93,10], :cylinder => true] }
+    let(:package){ [100, "93,10,5", :units => "metric"] }
     let(:params){ {origin: origin, destination: destination, packages: package} }
     let(:ups_client) { double("ups_client")}
     let(:extracted_info) { {"price" => 13437, "delivery_date" => "2014-02-27T00:00:00+00:00"} }
