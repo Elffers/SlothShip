@@ -1,4 +1,5 @@
 class ShipperController < ApplicationController
+  skip_before_action :verify_authenticity_token
 
   def estimate
     @estimate = Shipper.extract_info(estimate_params)
@@ -35,4 +36,10 @@ class ShipperController < ApplicationController
                                           
     redirect_to "/ups_estimate.json?#{estimate_hash.to_query}"
   end
+
+  def hello
+    name = JSON.parse(params[:data])["name"]
+    render text: "hello, #{name}"
+  end
+
 end
