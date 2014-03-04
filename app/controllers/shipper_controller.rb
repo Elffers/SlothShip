@@ -8,16 +8,32 @@ class ShipperController < ApplicationController
     end
   end
 
+  def fastest
+    @estimate = Shipper.fastest_rates(estimate_params)
+     respond_to do |format|
+      format.html { render :estimate }
+      format.json { render json: @estimate }
+    end
+  end
+
+  def cheapest
+    @estimate = Shipper.cheapest_rates(estimate_params)
+     respond_to do |format|
+      format.html { render :estimate }
+      format.json { render json: @estimate }
+    end
+  end
+
   #test method to simulate external request for estimate
   def mock_external_request
     estimate_hash = {order: {} }
     estimate_hash[:order][:packages] =[ { weight: 100,
-                                          dimensions: [93, 10, 5],
+                                          dimensions: "93, 10, 5", #breaks if this is an array
                                           units: "metric" 
                                         },
 
                                         { weight: (7.5 * 16),
-                                          dimensions: [15, 10, 4.5],
+                                          dimensions: "15, 10, 4.5",
                                           units: "imperial"
                                         }
                                       ]
@@ -33,6 +49,6 @@ class ShipperController < ApplicationController
                                             :postal_code => '98117'
                                           }
                                           
-    redirect_to "/ups_estimate.json?#{estimate_hash.to_query}"
+    redirect_to "/get_cheapest.json?#{estimate_hash.to_query}"
   end
 end
