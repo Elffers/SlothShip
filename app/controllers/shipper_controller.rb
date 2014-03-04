@@ -51,7 +51,7 @@ class ShipperController < ApplicationController
                                             :postal_code => '98117'
                                           }
                                           
-    redirect_to "/get_cheapest.json?#{estimate_hash.to_query}"
+    redirect_to "/get_estimate.json?#{estimate_hash.to_query}"
   end
 
   def hello
