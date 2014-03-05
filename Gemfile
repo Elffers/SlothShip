@@ -21,12 +21,12 @@ group :development, :test do
   gem "factory_girl_rails"
   gem 'better_errors'
   gem 'binding_of_caller'
-  gem 'simplecov', :require => false
 end
 
 group :test do
   gem "webmock", "~> 1.17.3"
   gem "vcr", "~> 2.8.0"
+  gem 'simplecov', :require => false
 end
 
 group :production do
