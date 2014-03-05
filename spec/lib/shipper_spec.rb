@@ -21,4 +21,16 @@ describe Shipper do
     end
   end
 
+  describe '.usps_client' do
+    it 'returns usps client' do
+      expect(Shipper.usps_client).to be_an_instance_of ActiveMerchant::Shipping::USPS
+    end
+  end
+
+  describe '.extract info' do
+    it 'returns an array of hashes' do
+      
+    end
+  end
+
 end
