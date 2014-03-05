@@ -59,4 +59,6 @@ class Shipper
     ups_info(order).rates + fedex_info(order).rates #eventually add usps?
   end
 
+# nested error class to handle errors
+
 end
