@@ -20,7 +20,7 @@ describe ShipperController do
     let(:estimate){ {foo:"bar"} }
 
     before do
-      allow(controller).to receive(:ups_client).and_return ups_client
+      # allow(controller).to receive(:ups_client).and_return ups_client
       allow(controller).to receive(:extract_info).and_return(extracted_info)
       expect(Shipper).to receive(:extract_info).and_return(estimate)
     end
