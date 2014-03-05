@@ -40,7 +40,7 @@ class Shipper
   end
 
   def self.cheapest_rates(order)
-    self.extract_info(order).sort_by { |option| option[:price] }
+    self.extract_info(order).sort_by { |option| option[:price ] }
   end
 
   def self.ups_info(order)
@@ -58,5 +58,7 @@ class Shipper
   def self.all_carriers(order)
     ups_info(order).rates + fedex_info(order).rates #eventually add usps?
   end
+
+# nested error class to handle errors
 
 end
