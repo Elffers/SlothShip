@@ -5,7 +5,7 @@ require 'shipper.rb'
 class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
-  protect_from_forgery with: :exception
+  # protect_from_forgery with: :exception
 
   def estimate_params
     params.require(:order).permit(:origin, :destination, :packages)
