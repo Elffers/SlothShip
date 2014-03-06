@@ -68,9 +68,10 @@ class ShipperController < ApplicationController
     method    = request.method # This it the HTTP method (ie "GET")
     params.delete(:controller) # Remove the controller and action keys from params
     params.delete(:action)
-    
+    params.delete(:format)
+
     unless ClientAuthentication.new("testkey", params, path, method, time, signature).authenticated?
-      render status: :unauthorized, text: "403 Unauthorized"
+      render status: :unauthorized, text: "Unauthorized 401"
     end
   end
 
