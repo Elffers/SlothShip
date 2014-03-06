@@ -47,11 +47,8 @@ describe Shipper do
 
   describe '.extract info' do
     xit 'returns an array of hashes' do
-      carriers = double("carriers")
       expect(Shipper.extract_info(order)).to be_an_instance_of Array
-
     end
-
   end
 
 end
