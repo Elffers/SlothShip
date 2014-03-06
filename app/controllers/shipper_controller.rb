@@ -61,18 +61,6 @@ class ShipperController < ApplicationController
     params.require(:order).permit(:origin, :destination, :packages)
   end
 
-  def check_authenticity
-    time      = request.env["HTTP_REQUEST_TIME"] # This is the field we set manually in the client
-    path      = request.env["PATH_INFO"] # Rails provides this key
-    signature = request.env["HTTP_REQUEST_SIGNATURE"] # This is the signature we created on the client
-    method    = request.method # This it the HTTP method (ie "GET")
-    params.delete(:controller) # Remove the controller and action keys from params
-    params.delete(:action)
-    params.delete(:format)
-
-    unless ClientAuthentication.new("testkey", params, path, method, time, signature).authenticated?
-      render status: :unauthorized, text: "Unauthorized 401"
-    end
-  end
+  
 
 end

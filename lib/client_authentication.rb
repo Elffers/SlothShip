@@ -21,10 +21,7 @@ class ClientAuthentication
     @params[:path]= @path
     @params[:method] = @method
     @params[:time] = @time
-    p "INCOMING", @params
-
     JSON.dump(@params)
-    # @params.to_query+"&path=#{@path}&method=#{@method}&time=#{@time}"
   end
 
   def digest
