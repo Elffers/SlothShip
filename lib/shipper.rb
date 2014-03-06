@@ -1,6 +1,7 @@
 require 'active_shipping'
 include ActiveMerchant::Shipping
 require 'order.rb'
+
 class Shipper
 
   def self.extract_info(order)
@@ -25,7 +26,6 @@ class Shipper
     self.extract_info(order).sort_by { |option| option[:price ] }
   end
 
- # Clients are instances of Active Shipping classes
   def self.ups_client
     UPS.new(:login => ENV['UPS_USERNAME'], 
             :password => ENV['UPS_PASSWORD'], 

@@ -4,7 +4,7 @@ describe Shipper do
   let(:origin){ { :country => 'US', :zip => '90210'} }
   let(:destination){ { :country => 'CA', :postal_code => 'K1P 1J1'} }
   let(:packages){ [{weight: 100, dimensions: "93,10,5", :units => "imperial"}] }
-  let!(:params){ {origin: origin, destination: destination, packages: packages} }
+  let(:params){ {origin: origin, destination: destination, packages: packages} }
 
   #check webmock docs for how to store an actual call and tweak to get desired erros
 
@@ -23,12 +23,6 @@ describe Shipper do
   describe '.fedex_client' do
     it 'returns fedex client' do
       expect(Shipper.fedex_client).to be_an_instance_of ActiveMerchant::Shipping::FedEx
-    end
-  end
-
-  describe '.usps_client' do
-    it 'returns usps client' do
-      expect(Shipper.usps_client).to be_an_instance_of ActiveMerchant::Shipping::USPS
     end
   end
 
