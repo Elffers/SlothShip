@@ -6,6 +6,6 @@ SlothShip::Application.routes.draw do
   get '/get_fastest' => 'shipper#fastest'
   get '/get_cheapest' => 'shipper#cheapest'
 
-  post '/hello' => 'shipper#hello'
+  post '/shipping' => 'shipper#hello'
   
 end

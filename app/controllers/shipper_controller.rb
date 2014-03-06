@@ -54,7 +54,7 @@ class ShipperController < ApplicationController
     redirect_to "/get_cheapest.json?#{estimate_hash.to_query}"
   end
 
-  def hello
+  def render_json
     name = JSON.parse(params[:data])["name"]
     render text: "hello, #{name}"
   end
