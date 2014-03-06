@@ -5,6 +5,7 @@ SlothShip::Application.routes.draw do
   
   post '/shipping_estimate' => 'shipper#estimate'
 
+  post '/shipping' => 'shipper#hello'
   post '/get_fastest' => 'shipper#fastest'
   post '/get_cheapest' => 'shipper#cheapest'
 
