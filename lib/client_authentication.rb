@@ -1,6 +1,6 @@
 class ClientAuthentication
 
-  def initialize(key, params, path, method, time, signature=nil)
+  def initialize(key, params, path, method, time, signature)
     @key          = key
     @params       = params
     @path         = path
@@ -9,8 +9,12 @@ class ClientAuthentication
     @signature    = signature
   end
 
+  def sign
+    Base64.encode64(OpenSSL::HMAC.digest(digest, @key, data)).chomp
+  end
+
   def authenticated?
-    timeout && @signature == sign
+    timeout && @signature == self.sign
   end
 
   def timeout
