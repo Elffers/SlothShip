@@ -4,7 +4,7 @@ describe ShipperController do
   let(:origin){ { :country => 'US', :zip => '90210'} }
   let(:destination){ { :country => 'CA', :postal_code => 'K1P 1J1'} }
   let(:packages){ [{weight: 100, dimensions: "93,10,5", :units => "imperial"}] }
-  let!(:params){ {origin: origin, destination: destination, packages: packages} }
+  let(:params){ {origin: origin, destination: destination, packages: packages} }
   # let(:ups_client) { double("ups_client") }
   # let(:extracted_info) { {"carrier" => "UPS", 
   #                         "service" => "UPS Express", 
@@ -17,7 +17,7 @@ describe ShipperController do
     before do
       # allow(controller).to receive(:ups_client).and_return ups_client
       # allow(controller).to receive(:extract_info).and_return(extracted_info)
-      expect(Shipper).to receive(:extract_info).and_return(estimate)
+      expect(Shipper).to receive(:extract_info).and_return(estimate) #with arg order?
     end
 
     it 'returns JSON' do
