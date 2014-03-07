@@ -4,51 +4,35 @@ describe Shipper do
   let(:origin){ { :country => 'US', :zip => '90210'} }
   let(:destination){ { :country => 'CA', :postal_code => 'K1P 1J1'} }
   let(:packages){ [{weight: 100, dimensions: "93,10,5", :units => "imperial"}] }
-  let(:params){ {origin: origin, destination: destination, packages: packages} }
+  let(:params){ {order: {origin: origin, destination: destination, packages: packages} } }
   let(:estimate){ [{carrier:'ups', service: "ground", price: 1000, delivery_date: Date.today}]}
+  let(:shipper){ Shipper.new(params) }
 
   describe '.ups_client' do
     it 'returns ups client' do
-      expect(Shipper.ups_client).to be_an_instance_of ActiveMerchant::Shipping::UPS
+      expect(shipper.ups_client).to be_an_instance_of ActiveMerchant::Shipping::UPS
     end
   end
 
   describe '.fedex_client' do
     it 'returns fedex client' do
-      expect(Shipper.fedex_client).to be_an_instance_of ActiveMerchant::Shipping::FedEx
-    end
-  end
-
-  describe '.ups info' do
-    xit 'returns an array of hashes' do
-      # order = double("order")
-      # origin = double("origin")
-      # destination = double("destination")
-      # packages = double("packages")
-      # expect(order).to receive(:[]).with(:destination) {destination}
-      # expect(order).to receive(:[]).with(:origin)      {origin}
-      # expect(order).to receive(:[]).with(:packages)    {packages}
-      # #is this just testing the gem?
-
-      ups_client = double("ups client")
-      rate_response = double("ActiveMerchant Response")
-      ups_client.stub(:find_rates){ rate_response }
-      expect(Shipper.ups_info(order)).to be_an_instance_of Array
-
+      expect(shipper.fedex_client).to be_an_instance_of ActiveMerchant::Shipping::FedEx
     end
   end
 
   describe '.extract info' do
     it 'returns an array of hashes' do
-      order = double("order")
-      Shipper.stub(:extract_info).with(order).and_return estimate
-      expect(Shipper.extract_info(order)).to be_an_instance_of Array
+      ups_response = double("Ups response")
+      fedex_response = double("fedex response")
+      rate = double("rate", carrier: "foo", service_name: "bar", price: 1000, delivery_date: Date.today)
+      shipper.stub(:ups_info).and_return ups_response
+      shipper.stub(:fedex_info).and_return fedex_response
+      expect(ups_response).to receive(:rates).and_return [rate]
+      expect(fedex_response).to receive(:rates).and_return [rate]
+
+      expect(shipper.extract_info.first[:carrier]).to eq "foo"
     end
 
-    it "returns a rate with a key of price" do
-      order = double("order")
-      expect(Shipper.extract_info(order).first).to eq 1455
-    end
   end
 
   #check webmock docs for how to store an actual call and tweak to get desired erros

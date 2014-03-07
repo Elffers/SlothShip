@@ -12,6 +12,7 @@ class ShipperController < ApplicationController
 
   def fastest
     @estimate = Shipper.new(params).fastest_rates
+    Request.create(request: estimate_params.to_s, result: @estimate.to_s)
      respond_to do |format|
       format.html { render :estimate }
       format.json { render json: @estimate }
@@ -20,6 +21,7 @@ class ShipperController < ApplicationController
 
   def cheapest
     @estimate = Shipper.new(params).cheapest_rates
+    Request.create(request: estimate_params.to_s, result: @estimate.to_s)
      respond_to do |format|
       format.html { render :estimate }
       format.json { render json: @estimate }
@@ -31,7 +33,7 @@ class ShipperController < ApplicationController
   def mock_external_request
     estimate_hash = {order: {} }
     estimate_hash[:order][:packages] =[ { weight: 100,
-                                          dimensions: "93, 10, 5", #breaks if this is an array
+                                          dimensions: "93, 10, 5", # breaks if this is an array
                                           units: "metric" 
                                         },
 

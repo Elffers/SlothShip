@@ -6,6 +6,7 @@ describe ShipperController do
   let(:packages){ [{weight: 100, dimensions: "93,10,5", :units => "imperial"}] }
   let(:params){ {origin: origin, destination: destination, packages: packages} }
   let(:estimate){ {foo: "bar"} }
+  let(:shipper){ double("Shipper")}
 
   describe 'POST "estimate"' do
   
@@ -13,8 +14,8 @@ describe ShipperController do
       # allow(controller).to receive(:ups_client).and_return ups_client
       # allow(controller).to receive(:extract_info).and_return(extracted_info)
       allow(controller).to receive(:check_authenticity).and_return(true)
-
-      expect(Shipper).to receive(:extract_info).and_return(estimate) #with arg order?
+      allow(Shipper).to receive(:new).and_return shipper
+      expect(shipper).to receive(:extract_info).and_return estimate
     end
 
     it 'returns JSON' do
@@ -33,7 +34,8 @@ describe ShipperController do
   describe 'POST "fastest"' do    
     before do
       allow(controller).to receive(:check_authenticity).and_return(true)
-      expect(Shipper).to receive(:fastest_rates).and_return(estimate)
+      allow(Shipper).to receive(:new).and_return shipper
+      expect(shipper).to receive(:fastest_rates).and_return estimate
     end
 
     it 'returns JSON' do
@@ -47,7 +49,8 @@ describe ShipperController do
   describe 'POST "cheapest"' do
     before do
       allow(controller).to receive(:check_authenticity).and_return(true)
-      expect(Shipper).to receive(:cheapest_rates).and_return(estimate)
+      allow(Shipper).to receive(:new).and_return shipper
+      expect(shipper).to receive(:cheapest_rates).and_return estimate
     end
     
     it 'returns JSON' do
