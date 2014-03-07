@@ -1,29 +1,19 @@
+require 'active_shipping'
+include ActiveMerchant::Shipping
+require 'order.rb'
+
 class Shipper
 
-  def self.ups_client
-    UPS.new(:login => ENV['UPS_USERNAME'], 
-            :password => ENV['UPS_PASSWORD'], 
-            :key => ENV['UPS_ACCESS_KEY']
-            )
+  def initialize(order_hash)
+    @order_hash = order_hash
   end
 
-  def self.fedex_client
-    options = { :key=> ENV['FEDEX_KEY'],
-                :password=> ENV['FEDEX_PASSWORD'],
-                :account=> ENV['FEDEX_ACCOUNT'],
-                :login=> ENV['FEDEX_LOGIN'],
-                :test => true 
-              }
-    FedEx.new(options)
+  def order
+    Order.new(@order_hash)
   end
 
-  # problem with authenticating with current key
-  def self.usps_client
-    USPS.new(login: ENV['USPS_USERNAME'])
-  end
-
-  def self.extract_info(order)
-    info = all_carriers(order).map do |rate|
+  def extract_info
+    info = all_carriers.map do |rate|
       shipment = {}
       shipment[:carrier]        = rate.carrier
       shipment[:service]        = rate.service_name
@@ -34,29 +24,44 @@ class Shipper
     info
   end
 
-  def self.fastest_rates(order)
-    deliverable = self.extract_info(order).keep_if { |option| option[:delivery_date].present?}
+  def fastest_rates
+    deliverable = self.extract_info.keep_if { |option| option[:delivery_date].present?}
     deliverable.sort_by { |option| option[:delivery_date] }
   end
 
-  def self.cheapest_rates(order)
-    self.extract_info(order).sort_by { |option| option[:price ] }
+  def cheapest_rates
+    self.extract_info.sort_by { |option| option[:price ] }
   end
 
-  def self.ups_info(order)
-    ups_client.find_rates(order[:origin], order[:destination], order[:packages])
+ # Clients are instances of ActiveShipping classes
+  def ups_client
+    UPS.new(:login => ENV['UPS_USERNAME'], 
+            :password => ENV['UPS_PASSWORD'], 
+            :key => ENV['UPS_ACCESS_KEY']
+            )
   end
 
-  def self.fedex_info(order)
-    fedex_client.find_rates(order[:origin], order[:destination], order[:packages])
+  def fedex_client
+    options = { :key=> ENV['FEDEX_KEY'],
+                :password=> ENV['FEDEX_PASSWORD'],
+                :account=> ENV['FEDEX_ACCOUNT'],
+                :login=> ENV['FEDEX_LOGIN'],
+                :test => true 
+              }
+    FedEx.new(options)
   end
 
-  def self.usps_info(order)
-    usps_client.find_rates(order[:origin], order[:destination], order[:packages])
+# These make calls (.find_rates) to remote APIs via Active Shipping gem
+  def ups_info
+    ups_client.find_rates(order.origin, order.destination, order.packages)
   end
 
-  def self.all_carriers(order)
-    ups_info(order).rates + fedex_info(order).rates #eventually add usps?
+  def fedex_info
+    fedex_client.find_rates(order.origin, order.destination, order.packages)
+  end
+
+  def all_carriers
+    ups_info.rates + fedex_info.rates 
   end
 
 # nested error class to handle errors
