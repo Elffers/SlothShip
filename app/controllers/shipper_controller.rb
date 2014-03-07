@@ -59,7 +59,7 @@ class ShipperController < ApplicationController
 
   private
   def estimate_params
-    params.require(:order).permit(:origin, :destination, :packages)
+    params.require(:order).permit(:origin, :destination, :packages => [])
   end
 
   

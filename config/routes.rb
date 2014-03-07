@@ -1,8 +1,7 @@
 SlothShip::Application.routes.draw do
 
-  get '/' => 'shipper#mock_external_request'
-  get '/shipping_estimate' => 'shipper#estimate'
-  
+  get  '/' => 'shipper#mock_external_request'
+  get  '/shipping_estimate' => 'shipper#estimate'
   post '/shipping_estimate' => 'shipper#estimate'
 
   post '/shipping' => 'shipper#hello'
