@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   # protect_from_forgery with: :exception
-  before_action :check_authenticity
+  # before_action :check_authenticity
 
   def check_authenticity
     time      = request.env["HTTP_REQUEST_TIME"] # This is the field we set manually in the client

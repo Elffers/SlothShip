@@ -6,7 +6,6 @@ class Shipper
 
   def initialize(order_hash)
     @order_hash = order_hash
-    # order = Order.new(order)
   end
 
   def order
@@ -14,7 +13,7 @@ class Shipper
   end
 
   def extract_info
-    info = all_carriers(order).map do |rate|
+    info = all_carriers.map do |rate|
       shipment = {}
       shipment[:carrier]        = rate.carrier
       shipment[:service]        = rate.service_name
@@ -53,16 +52,16 @@ class Shipper
   end
 
 # These make calls (.find_rates) to remote APIs via Active Shipping gem
-  def self.ups_info(order)
+  def ups_info
     ups_client.find_rates(order.origin, order.destination, order.packages)
   end
 
-  def self.fedex_info(order)
+  def fedex_info
     fedex_client.find_rates(order.origin, order.destination, order.packages)
   end
 
-  def self.all_carriers(order)
-    ups_info(order).rates + fedex_info(order).rates 
+  def all_carriers
+    ups_info.rates + fedex_info.rates 
   end
 
 # nested error class to handle errors
