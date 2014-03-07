@@ -5,18 +5,15 @@ describe ShipperController do
   let(:destination){ { :country => 'CA', :postal_code => 'K1P 1J1'} }
   let(:packages){ [{weight: 100, dimensions: "93,10,5", :units => "imperial"}] }
   let(:params){ {origin: origin, destination: destination, packages: packages} }
-  # let(:ups_client) { double("ups_client") }
-  # let(:extracted_info) { {"carrier" => "UPS", 
-  #                         "service" => "UPS Express", 
-  #                         "price" => 13437, 
-  #                         "delivery_date" => "2014-02-27T00:00:00+00:00"} }
-  let(:estimate){ {foo:"bar"} }
+  let(:estimate){ {foo: "bar"} }
 
   describe 'POST "estimate"' do
   
     before do
       # allow(controller).to receive(:ups_client).and_return ups_client
       # allow(controller).to receive(:extract_info).and_return(extracted_info)
+      allow(controller).to receive(:check_authenticity).and_return(true)
+
       expect(Shipper).to receive(:extract_info).and_return(estimate) #with arg order?
     end
 
@@ -35,6 +32,7 @@ describe ShipperController do
 
   describe 'POST "fastest"' do    
     before do
+      allow(controller).to receive(:check_authenticity).and_return(true)
       expect(Shipper).to receive(:fastest_rates).and_return(estimate)
     end
 
@@ -48,6 +46,7 @@ describe ShipperController do
 
   describe 'POST "cheapest"' do
     before do
+      allow(controller).to receive(:check_authenticity).and_return(true)
       expect(Shipper).to receive(:cheapest_rates).and_return(estimate)
     end
     

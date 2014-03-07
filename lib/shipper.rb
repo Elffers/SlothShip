@@ -4,8 +4,16 @@ require 'order.rb'
 
 class Shipper
 
-  def self.extract_info(order)
-    order = Order.new(order)
+  def initialize(order_hash)
+    @order_hash = order_hash
+    # order = Order.new(order)
+  end
+
+  def order
+    Order.new(@order_hash)
+  end
+
+  def extract_info
     info = all_carriers(order).map do |rate|
       shipment = {}
       shipment[:carrier]        = rate.carrier
@@ -17,23 +25,24 @@ class Shipper
     info
   end
 
-  def self.fastest_rates(order)
+  def fastest_rates
     deliverable = self.extract_info(order).keep_if { |option| option[:delivery_date].present?}
     deliverable.sort_by { |option| option[:delivery_date] }
   end
 
-  def self.cheapest_rates(order)
+  def cheapest_rates
     self.extract_info(order).sort_by { |option| option[:price ] }
   end
 
-  def self.ups_client
+ # Clients are instances of Active Shipping classes
+  def ups_client
     UPS.new(:login => ENV['UPS_USERNAME'], 
             :password => ENV['UPS_PASSWORD'], 
             :key => ENV['UPS_ACCESS_KEY']
             )
   end
 
-  def self.fedex_client
+  def fedex_client
     options = { :key=> ENV['FEDEX_KEY'],
                 :password=> ENV['FEDEX_PASSWORD'],
                 :account=> ENV['FEDEX_ACCOUNT'],
