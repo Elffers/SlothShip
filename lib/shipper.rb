@@ -25,12 +25,12 @@ class Shipper
   end
 
   def fastest_rates
-    deliverable = self.extract_info(order).keep_if { |option| option[:delivery_date].present?}
+    deliverable = self.extract_info.keep_if { |option| option[:delivery_date].present?}
     deliverable.sort_by { |option| option[:delivery_date] }
   end
 
   def cheapest_rates
-    self.extract_info(order).sort_by { |option| option[:price ] }
+    self.extract_info.sort_by { |option| option[:price ] }
   end
 
  # Clients are instances of ActiveShipping classes
