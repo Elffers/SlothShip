@@ -1,5 +1,4 @@
 class ClientAuthentication
-
   def initialize(key, params, path, method, time, signature)
     @key          = key
     @params       = params
@@ -14,11 +13,11 @@ class ClientAuthentication
   end
 
   def authenticated?
-    timeout && @signature == self.sign
+    timeout && @signature == sign
   end
 
   def data
-    @params[:path]= @path
+    @params[:path] = @path
     @params[:method] = @method
     @params[:time] = @time
     JSON.dump(@params)
@@ -31,5 +30,4 @@ class ClientAuthentication
   def timeout
     Time.now.to_i - @time.to_i < 10
   end
-
 end
