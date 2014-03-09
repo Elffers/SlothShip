@@ -3,7 +3,6 @@ include ActiveMerchant::Shipping
 require 'order.rb'
 
 class Shipper
-
   def initialize(order_hash)
     @order_hash = order_hash
   end
@@ -25,33 +24,33 @@ class Shipper
   end
 
   def fastest_rates
-    deliverable = self.extract_info.keep_if { |option| option[:delivery_date].present?}
+    deliverable = extract_info.keep_if { |option| option[:delivery_date].present? }
     deliverable.sort_by { |option| option[:delivery_date] }
   end
 
   def cheapest_rates
-    self.extract_info.sort_by { |option| option[:price ] }
+    extract_info.sort_by { |option| option[:price] }
   end
 
  # Clients are instances of ActiveShipping classes
   def ups_client
-    UPS.new(:login => ENV['UPS_USERNAME'], 
-            :password => ENV['UPS_PASSWORD'], 
-            :key => ENV['UPS_ACCESS_KEY']
+    UPS.new(login: ENV['UPS_USERNAME'],
+            password: ENV['UPS_PASSWORD'],
+            key: ENV['UPS_ACCESS_KEY']
             )
   end
 
   def fedex_client
-    options = { :key=> ENV['FEDEX_KEY'],
-                :password=> ENV['FEDEX_PASSWORD'],
-                :account=> ENV['FEDEX_ACCOUNT'],
-                :login=> ENV['FEDEX_LOGIN'],
-                :test => true 
+    options = { key: ENV['FEDEX_KEY'],
+                password: ENV['FEDEX_PASSWORD'],
+                account: ENV['FEDEX_ACCOUNT'],
+                login: ENV['FEDEX_LOGIN'],
+                test: true
               }
     FedEx.new(options)
   end
 
-# These make calls (.find_rates) to remote APIs via Active Shipping gem
+  # These make calls (.find_rates) to remote APIs via Active Shipping gem
   def ups_info
     ups_client.find_rates(order.origin, order.destination, order.packages)
   end
@@ -61,9 +60,8 @@ class Shipper
   end
 
   def all_carriers
-    ups_info.rates + fedex_info.rates 
+    ups_info.rates + fedex_info.rates
   end
 
-# nested error class to handle errors
-
+  # nested error class to handle errors
 end
