@@ -1,6 +1,8 @@
 Shipping Service
 =================
 
+## ADA Week 16-17 Project
+
 Build a stand-alone shipping service API that calculates estimated shipping cost for an order from your Congo application
 ## Goals
 - Successful pair programming experience
@@ -15,7 +17,6 @@ Build a stand-alone shipping service API that calculates estimated shipping cost
     + Testing of 3rd party services
 - Develop a "client first" approach
 - Increase confidence in working with 3rd party APIs
-
 
 
 ## Guidelines
