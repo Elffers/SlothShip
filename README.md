@@ -1,7 +1,7 @@
 Shipping Service
 =================
 
-## ADA Week 16-17 Project
+## [ADA Week 16-17 Project](https://github.com/Ada-Developers-Academy/daily-curriculum/blob/master/week16/shipping_service.md)
 
 Build a stand-alone shipping service API that calculates estimated shipping cost for an order from your Congo application
 ## Goals
